@@ -13,7 +13,7 @@
 - 图像工具 T1 相同图通过，T2 位移 6px 正确失败，T3 两次冻结截图逐字节一致。
 - 开发工具与独立 Skill 两个 viewer 的合成示例和四种对照模式均实际运行通过。
 - `skill-creator/scripts/quick_validate.py` 验证技能元数据有效；工具快照逐字节一致检查通过。
-- GitHub Actions 两份 YAML 本地解析通过；不是 GitHub 远端执行结果。
+- GitHub Actions 两份 YAML 本地解析通过；首次推送的 Windows / Ubuntu 自动检查已在 GitHub 实际执行成功，见下方回执。
 - 完整 `npm run verify` 在主目录与 Git 索引导出的全新目录分别执行成功，退出码均为 0。干净目录从官方 npm 源重新安装，不含原开发目录的依赖或旧截图。
 - 发布检查通过：299 个候选文件，约 22.8MB；46 个本地 Markdown 链接全部有效；`git diff --cached --check` 无空白错误。
 
@@ -32,10 +32,18 @@
 
 生成文件不提交 Git。README 使用的 `docs/images/dashboard.png` 来自本次图片场景 1871×841 实测截图。
 
+## GitHub 上传与 CI 回执
+
+- 仓库：[yanbo8806/frontend-dashboard-lab](https://github.com/yanbo8806/frontend-dashboard-lab)，当前为私有仓库，默认分支 `main`。
+- 首次上传提交：`c3bbd2f4f12a9f0dce9261c17e339200821f86b6`，已核对远端与本地 SHA 一致。
+- [首次 GitHub Actions 检查](https://github.com/yanbo8806/frontend-dashboard-lab/actions/runs/39343053317) 结果为 success；Windows / Ubuntu 均通过安装、58 项单元测试、构建、Skill 和发布检查。
+- `browser-manual` 按工作流条件跳过，不将本地 40 项浏览器检查冒充云端浏览器验证；Pages 未启动。
+- 上传使用用户指定的本机代理与系统凭据库；没有修改全局 Git 作者、凭据助手或系统代理。提交作者采用 GitHub noreply 邮箱。
+
 ## 尚未通过 / 尚未验证
 
 - npm 官方审计仍有 4 个依赖项公告（3 moderate、1 critical），未升级核心依赖，不宣称安全审计通过。
-- GitHub 用户登录、远端建仓、push 与 Actions 尚需真实回执；Pages 尚未部署。
+- GitHub 登录、私有仓库上传和首次跨平台 CI 已验证；公开发布与 Pages 尚未执行。
 - 用户地图公开再分发权限、最终代码许可证由作者确认。
-- 生产 API、第三方带密钥地图、其他操作系统/GPU 与原生 Excel/WPS 尚未验证。
+- 生产 API、第三方带密钥地图、非本机 GPU 的浏览器回归与原生 Excel/WPS 尚未验证。
 - OpenAI Skills 官方在线文档返回 403，仅记录本地验证与使用说明。
