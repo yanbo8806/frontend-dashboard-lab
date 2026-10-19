@@ -1,0 +1,45 @@
+.map-presentation-layer { position:absolute;inset:0; }
+.map-presentation-layer[hidden] { display:none!important; }
+.map-presentation-layer>.gis-canvas { position:absolute;inset:0;width:100%;height:100%; }
+.map-mode-switch { position:absolute;right:18px;top:15px;display:flex;z-index:5;padding:3px;background:#031c30dd;border:1px solid #235b73;border-radius:4px;gap:2px; }
+.map-mode-switch button { height:27px;min-width:74px;padding:0 11px;font-size:11px;letter-spacing:0;color:#80aec2;border:0;background:transparent;border-radius:2px; }
+.map-mode-switch button[aria-pressed=true] { background:#17475b;color:#d4f6fa;box-shadow:inset 0 0 0 1px #3b7989; }
+.map-mode-switch button:hover { color:#fff; }
+.gis-map[data-presentation=gis] .map-tools { top:61px; }
+.gis-map[data-presentation=gis] .maplibregl-ctrl-top-right { top:53px; }
+.gis-map[data-presentation=image] { border-radius:0;background:#041627; }
+.gis-map[data-presentation=image]::after { box-shadow:inset 0 0 48px 10px #00172a77; }
+.image-map { position:absolute;inset:0;overflow:hidden;letter-spacing:0; }
+.image-map-surface { position:absolute;inset:0;overflow:hidden;cursor:grab;touch-action:none;user-select:none; }
+.image-map-surface.dragging { cursor:grabbing; }
+.image-map-canvas { position:absolute;inset:0;display:block; }
+.image-map-poster { position:absolute;object-fit:contain;pointer-events:none; }
+.image-map-poster[hidden] { display:none; }
+.image-map .map-heading { left:23px;top:18px;text-shadow:0 2px 9px #001323; }
+.image-map .map-heading strong { font-size:18px;letter-spacing:0; }
+.image-map .map-heading span { font-size:11px;letter-spacing:0;color:#8facbc;margin-top:6px; }
+.image-map-status { top:auto;bottom:32px;left:24px;max-width:400px;color:#b2d4df;text-shadow:0 1px 5px #001424;font-size:10px; }
+.image-map-status::before { content:'';display:inline-block;width:4px;height:4px;margin:0 7px 2px 0;border-radius:50%;background:#f2d49a; }
+.image-map-status.error { top:76px;bottom:auto;max-width:70%; }
+.image-map-attribution { left:24px;right:auto;bottom:15px;color:#739aaa;font-size:9px;letter-spacing:0; }
+.image-map-tools { position:absolute;right:18px;bottom:18px;z-index:4;display:flex;align-items:center;gap:2px;background:#031a2add;padding:4px;border:1px solid #31586b;border-radius:4px; }
+.image-map-tool { position:relative;display:grid;place-items:center;width:30px;height:30px;border:0;border-radius:2px;background:transparent;color:#b7d9e5; }
+.image-map-tool:hover { background:#1a4c61;color:#fff; }
+.image-map-tool:disabled { opacity:.3;cursor:default; }
+.image-map-tool[aria-pressed=true] { color:#f6dfaa; }
+.image-map-tool::after { content:attr(data-tooltip);position:absolute;bottom:calc(100% + 12px);right:0;min-width:max-content;padding:5px 8px;background:#061b2bf5;border:1px solid #3c6577;border-radius:3px;color:#d9edf5;font-size:11px;line-height:18px;pointer-events:none;opacity:0;transform:translateY(3px);transition:opacity .14s,transform .14s; }
+.image-map-tool:hover::after,.image-map-tool:focus-visible::after { opacity:1;transform:translateY(0); }
+.image-map-tool svg { width:18px;height:18px; }
+.image-map-zoom { width:42px;text-align:center;font:11px/30px Arial,sans-serif;color:#95b6c7;font-variant-numeric:tabular-nums; }
+.image-map-labels { position:absolute;inset:0;pointer-events:none; }
+.image-poi { position:absolute;transform:translate(-50%,-100%);width:max-content;max-width:190px;padding:0;gap:4px;pointer-events:auto;z-index:2; }
+.image-poi[hidden] { display:none; }
+.image-poi span { font-size:12px;font-weight:500;line-height:24px;padding:0 8px;max-width:180px;white-space:normal;text-align:center;border:1px solid #688c9d99;background:#082030d9;box-shadow:0 2px 8px #00132266;color:#e1eff2;border-radius:2px;letter-spacing:0; }
+.image-poi i { width:6px;height:6px;border:0;background:#e7fbff;box-shadow:0 0 7px 2px #7dd8f866; }
+.image-poi:hover span,.image-poi.selected span { background:#163443f5;color:#ffe7b2;border-color:#f1d296; }
+.image-poi.selected { z-index:3; }
+.image-poi.selected i { background:#ffe7b2; }
+.image-hub { pointer-events:none; }
+.image-hub span { color:#ffdf9a;border-color:#b5976699;background:#1a2b35e0;font-size:14px;font-weight:600;line-height:28px;padding:0 11px; }
+.image-hub i { width:7px;height:7px;background:#ffe7b2;box-shadow:0 0 7px 2px #ffe7b255; }
+@media (prefers-reduced-motion:reduce) { .image-map-tool::after { transition:none; } }

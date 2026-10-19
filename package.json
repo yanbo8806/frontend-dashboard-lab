@@ -1,0 +1,24 @@
+{
+  "name": "frontend-dashboard-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "以可配置文旅大屏学习原生前端、模块化、数据流、图表、WebGL 与 AI Skill。",
+  "engines": { "node": ">=22.21.0" },
+  "scripts": {
+    "setup": "npm ci --prefix apps/dashboard && npm ci --prefix packages/img2code",
+    "dev": "npm run dev --prefix apps/dashboard",
+    "build": "npm run build --prefix apps/dashboard",
+    "start": "npm start --prefix apps/dashboard",
+    "preview": "npm run preview --prefix apps/dashboard",
+    "test": "npm test --prefix apps/dashboard && node --test --test-timeout=60000 tests/*.test.mjs",
+    "test:browser": "npm run test:image-map --prefix apps/dashboard",
+    "test:toolkit": "node packages/img2code/bin/img2code.mjs selftest --work-dir out/toolkit-selftest",
+    "test:viewer": "node scripts/verify-viewer.mjs",
+    "verify": "node --test --test-timeout=60000 tests/*.test.mjs && npm run verify --prefix apps/dashboard && npm run test:toolkit && npm run test:viewer && npm run skill:check",
+    "template": "npm run template --prefix apps/dashboard",
+    "skill:check": "node scripts/check-skill.mjs",
+    "docs:check": "node scripts/check-links.mjs",
+    "release:check": "node scripts/check-release.mjs && npm run docs:check"
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "图片还原网页"
+  short_description: "从参考截图还原网页，用视觉分层、局部对照与确定性截图改进效果"
+  default_prompt: "使用 $screenshot-to-web 分析这张参考图，改进网页还原效果并给出截图对照。"

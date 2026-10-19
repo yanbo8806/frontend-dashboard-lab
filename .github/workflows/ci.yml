@@ -1,0 +1,55 @@
+name: 教学项目检查
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.21.1'
+          cache: npm
+          cache-dependency-path: |
+            apps/dashboard/package-lock.json
+            packages/img2code/package-lock.json
+      - run: npm run setup
+      - run: npm test
+      - run: npm run build
+      - run: npm run skill:check
+      - run: npm run release:check
+
+  browser-manual:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.21.1'
+      - run: npm run setup
+      - run: npx playwright install --with-deps chromium
+        working-directory: packages/img2code
+      - run: npm run verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-verification
+          path: |
+            apps/dashboard/out/
+            out/
+          retention-days: 7

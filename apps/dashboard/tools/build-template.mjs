@@ -1,0 +1,12 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import assert from 'node:assert/strict';
+import {exportWorkbook,importWorkbook} from '../src/config/excel.js';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const config=JSON.parse(await fs.readFile(path.join(root,'public/config/dashboard.json'),'utf8'));
+const bytes=await exportWorkbook(config);
+const imported=await importWorkbook(bytes,config);assert.deepEqual(imported.config,config);
+const output=path.join(root,'outputs/xianyang-config/咸阳文旅配置模板.xlsx');
+await fs.mkdir(path.dirname(output),{recursive:true});await fs.writeFile(output,bytes);
+console.log(`模板已导出并回读校验通过：${output}`);

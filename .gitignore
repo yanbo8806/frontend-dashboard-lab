@@ -1,0 +1,32 @@
+# 只发布教学源码与必要素材；个人凭据、构建和历史调试产物不进入 Git。
+node_modules/
+dist/
+out/
+outputs/
+.tools/
+.env
+.env.*
+!.env.example
+*.log
+*.tsbuildinfo
+*.keystore
+*.jks
+*.pem
+*.key
+*.p12
+*.apk
+*.aab
+*.zip
+Thumbs.db
+.DS_Store
+.idea/
+.vscode/
+
+# 旧项目调查工具的本地副本：依赖未发布的旧参考截图，不属于教学发行版。
+/apps/dashboard/tools/calibrate-type.mjs
+/apps/dashboard/tools/inspect-map.mjs
+/apps/dashboard/tools/inspect-public-pages.mjs
+/apps/dashboard/tools/prepare-photos.mjs
+/apps/dashboard/tools/prepare-xianyang.mjs
+/apps/dashboard/tools/research-places.mjs
+/apps/dashboard/tools/verify.mjs

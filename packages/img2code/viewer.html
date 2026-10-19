@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>img2code · 图片还原工作台</title>
+<style>
+:root{color-scheme:dark;--bg:#111417;--surface:#191e23;--line:#30363d;--fg:#e3e8ed;--muted:#96a2ac;--accent:#86ddd0}
+*{box-sizing:border-box}body{margin:0;height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--fg);font:13px/1.5 system-ui,"Microsoft YaHei",sans-serif}
+header{padding:20px 28px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:20px}
+h1{font-size:18px;font-weight:600;margin:0;letter-spacing:-.4px}h1 span{color:var(--accent);margin-right:14px;font:600 13px ui-monospace,monospace}header p{color:var(--muted);margin:4px 0 0;font-size:12px}
+.files{display:flex;gap:8px;align-items:center}button,label.file{border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:8px 12px;border-radius:5px;font:inherit;cursor:pointer;transition:background .12s,border-color .12s}
+button:hover,label.file:hover{background:#263139;border-color:#61767c}button:focus-visible,input:focus-visible,select:focus-visible,label.file:focus-within{outline:2px solid var(--accent);outline-offset:2px}.file input{position:absolute;width:1px;height:1px;clip-path:inset(50%)}
+nav{padding:12px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;border-bottom:1px solid var(--line)}.modes{display:flex;gap:2px;padding:3px;background:#080b0d;border-radius:6px}.modes button{border:0;background:transparent;padding:6px 12px;color:var(--muted)}.modes button[aria-pressed="true"]{background:#2a3639;color:var(--accent)}
+.control{display:flex;align-items:center;gap:8px;color:var(--muted)}input[type=range]{accent-color:var(--accent);width:110px}select{font:inherit;background:var(--surface);color:var(--fg);padding:6px;border:1px solid var(--line);border-radius:4px}#status{margin-left:auto;color:var(--muted);font:12px ui-monospace,monospace}
+#workspace{position:relative;flex:1;min-height:180px;overflow:hidden;background-color:#0a0e12;background-image:linear-gradient(45deg,#10151a 25%,transparent 25%),linear-gradient(-45deg,#10151a 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#10151a 75%),linear-gradient(-45deg,transparent 75%,#10151a 75%);background-size:24px 24px;background-position:0 0,0 12px,12px -12px,-12px 0}canvas{width:100%;height:100%;display:block;cursor:grab;touch-action:none}canvas.dragging{cursor:grabbing}.empty{position:absolute;inset:0;display:grid;place-content:center;text-align:center;pointer-events:none}.empty h2{font-weight:500;font-size:25px;margin:0 0 10px}.empty p{color:var(--muted);margin:0}.empty small{color:var(--muted);margin-top:15px}
+footer{border-top:1px solid var(--line);padding:9px 28px;color:var(--muted);display:flex;gap:20px;font-size:12px}#coords{margin-left:auto;font-family:ui-monospace,monospace}.error{color:#ffb2a7!important}output{min-width:35px;color:var(--fg)}[hidden]{display:none!important}
+@media(max-width:800px){header{align-items:flex-start;padding:16px;flex-direction:column;gap:12px}nav{padding:10px 16px;gap:12px}#status{margin-left:0}footer{padding:8px 16px}.modes button{padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){button,label.file{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1><span>img2code /</span>图片还原工作台</h1><p>同一坐标下比较原图与网页截图，放大查看文字、边缘和布局。</p></div>
+  <div class="files">
+    <label class="file">打开参考图<input type="file" id="referenceFile" accept="image/png,image/jpeg,image/webp"></label>
+    <label class="file">打开网页截图<input type="file" id="actualFile" accept="image/png,image/jpeg,image/webp"></label>
+    <button id="example">加载合成示例</button>
+  </div>
+</header>
+<nav aria-label="图像比较选项">
+  <div class="modes" role="group" aria-label="比较模式">
+    <button data-mode="side" aria-pressed="true">并排</button><button data-mode="overlay" aria-pressed="false">叠加</button>
+    <button data-mode="wipe" aria-pressed="false">滑杆</button><button data-mode="diff" aria-pressed="false">差异</button><button data-mode="blink" aria-pressed="false">闪烁</button>
+  </div>
+  <label class="control" id="mixControl" hidden>混合<input id="mix" type="range" min="0" max="100" value="50"><output id="mixValue">50%</output></label>
+  <label class="control">缩放<select id="zoom"><option value="fit">适合窗口</option><option value="0.5">50%</option><option value="1">100%</option><option value="2">200%</option><option value="4">400%</option></select></label>
+  <button id="reset" title="重置平移和缩放">复位</button>
+  <span id="status" role="status" aria-live="polite">等待图片</span>
+</nav>
+<main id="workspace">
+  <canvas id="canvas" aria-label="图像比较画布"></canvas>
+  <div class="empty" id="empty"><h2>从两张图开始</h2><p>选择参考图与网页截图，或加载本地合成示例。</p><small>图片只在本地浏览器处理。</small></div>
+</main>
+<footer><span id="legend">A 参考图 · B 网页截图</span><span>拖动平移 · 滚轮缩放 · 双击复位</span><span id="coords">x — / y —</span></footer>
+<script>
+const $=id=>document.getElementById(id), canvas=$('canvas'), ctx=canvas.getContext('2d');
+const state={a:null,b:null,pixelsA:null,pixelsB:null,diff:null,mode:'side',zoom:'fit',panX:0,panY:0,mix:.5,blink:false,scale:1,originX:0,originY:0,width:0,height:0};
+let timer=null,loadSerial={a:0,b:0};
+function pixels(image){const c=document.createElement('canvas');c.width=image.naturalWidth;c.height=image.naturalHeight;c.getContext('2d').drawImage(image,0,0);return c.getContext('2d').getImageData(0,0,c.width,c.height);}
+function updatePair(){
+  state.diff=null;state.pixelsA=state.pixelsB=null;$('status').classList.remove('error');
+  if(!state.a||!state.b){$('status').textContent=state.a?'已载入参考图，等待网页截图':'已载入网页截图，等待参考图';render();return;}
+  const a=state.a,b=state.b;
+  if(a.naturalWidth!==b.naturalWidth||a.naturalHeight!==b.naturalHeight){$('status').textContent='尺寸不一致：A '+a.naturalWidth+'×'+a.naturalHeight+' / B '+b.naturalWidth+'×'+b.naturalHeight;$('status').classList.add('error');render();return;}
+  try{
+    const pa=pixels(a),pb=pixels(b),c=document.createElement('canvas');c.width=a.naturalWidth;c.height=a.naturalHeight;
+    const data=new ImageData(c.width,c.height);let total=0;
+    for(let i=0;i<data.data.length;i+=4){for(let k=0;k<3;k++){const d=Math.abs(pa.data[i+k]-pb.data[i+k]);total+=d;data.data[i+k]=Math.min(255,d*3);}data.data[i+3]=255;}
+    c.getContext('2d').putImageData(data,0,0);state.diff=c;state.pixelsA=pa;state.pixelsB=pb;
+    $('status').textContent=c.width+'×'+c.height+' · RGB MAE '+(total/(c.width*c.height*3)).toFixed(2);
+  }catch(error){$('status').textContent='无法读取像素：请使用本地文件或同源图片';$('status').classList.add('error');}
+  render();
+}
+async function load(which,url){
+  const serial=++loadSerial[which];const image=new Image();
+  await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error('无法载入图片'));image.src=url;});
+  if(serial!==loadSerial[which])return;
+  state[which]=image;updatePair();
+}
+function error(e){$('status').textContent=e.message;$('status').classList.add('error');}
+for(const [id,which] of [['referenceFile','a'],['actualFile','b']])$(id).addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;const url=URL.createObjectURL(file);try{await load(which,url);}catch(err){error(err);}finally{URL.revokeObjectURL(url);}});
+function geometry(){
+  const r=canvas.getBoundingClientRect(),a=state.a||state.b;if(!a)return;
+  const dpr=devicePixelRatio||1;canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+  const w=Math.max(state.a?.naturalWidth||0,state.b?.naturalWidth||0),h=Math.max(state.a?.naturalHeight||0,state.b?.naturalHeight||0);
+  const gap=state.mode==='side'?20:0, total=state.mode==='side'?w*2+gap:w;
+  const z=state.zoom==='fit'?Math.min((r.width-40)/total,(r.height-64)/h):state.zoom;
+  state.scale=Math.max(.02,z);state.width=w;state.height=h;state.originX=(r.width-total*state.scale)/2+state.panX;state.originY=(r.height-h*state.scale)/2+state.panY;
+  return {r,w,h,gap};
+}
+function render(){
+  $('empty').hidden=!!(state.a||state.b);const g=geometry();if(!g){ctx.clearRect(0,0,canvas.width,canvas.height);return;}
+  const {r,w,h,gap}=g;ctx.clearRect(0,0,r.width,r.height);ctx.save();ctx.translate(state.originX,state.originY);ctx.scale(state.scale,state.scale);ctx.imageSmoothingEnabled=state.scale<1;
+  const draw=(img,x=0)=>{if(img)ctx.drawImage(img,x,0);};
+  if(state.mode==='side'){draw(state.a);draw(state.b,w+gap);}
+  else if(state.mode==='diff'){draw(state.diff||state.a);}
+  else if(state.mode==='blink'){draw(state.blink?state.b:state.a);}
+  else{draw(state.a);if(state.mode==='overlay'){ctx.globalAlpha=state.mix;draw(state.b);ctx.globalAlpha=1;}else{ctx.save();ctx.beginPath();ctx.rect(0,0,w*state.mix,h);ctx.clip();draw(state.b);ctx.restore();ctx.strokeStyle='#f5e18b';ctx.lineWidth=1/state.scale;ctx.beginPath();ctx.moveTo(w*state.mix,0);ctx.lineTo(w*state.mix,h);ctx.stroke();}}
+  ctx.restore();
+  ctx.font='12px system-ui';ctx.fillStyle='#a7b5bd';ctx.fillText(state.mode==='diff'?'RGB 绝对差 ×3':state.mode==='side'?'A / 参考图':'A / 参考图 + B / 网页截图',Math.max(12,state.originX),Math.max(18,state.originY-10));
+  if(state.mode==='side')ctx.fillText('B / 网页截图',state.originX+(w+gap)*state.scale,Math.max(18,state.originY-10));
+  canvas.dataset.mode=state.mode;
+}
+function reset(){state.panX=state.panY=0;state.zoom='fit';$('zoom').value='fit';render();}
+function setMode(mode){
+  state.mode=mode;if(timer){clearInterval(timer);timer=null;}state.blink=false;
+  document.querySelectorAll('button[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
+  $('mixControl').hidden=!['overlay','wipe'].includes(mode);
+  if(mode==='blink'){timer=setInterval(()=>{state.blink=!state.blink;render();},600);}
+  $('legend').textContent=mode==='diff'?'差异亮度已放大 3 倍；不是相似度评分':'A 参考图 · B 网页截图';reset();
+}
+document.querySelectorAll('button[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+$('mix').addEventListener('input',()=>{state.mix=Number($('mix').value)/100;$('mixValue').value=$('mix').value+'%';render();});
+$('zoom').addEventListener('change',()=>{state.zoom=$('zoom').value==='fit'?'fit':Number($('zoom').value);render();});$('reset').onclick=reset;canvas.ondblclick=reset;
+let drag=null;
+canvas.addEventListener('pointerdown',e=>{drag={x:e.clientX-state.panX,y:e.clientY-state.panY};canvas.setPointerCapture(e.pointerId);canvas.classList.add('dragging');});
+function endDrag(){drag=null;canvas.classList.remove('dragging');}
+canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);
+canvas.addEventListener('pointermove',e=>{
+  if(drag){state.panX=e.clientX-drag.x;state.panY=e.clientY-drag.y;render();}
+  const r=canvas.getBoundingClientRect();let x=Math.floor((e.clientX-r.left-state.originX)/state.scale),y=Math.floor((e.clientY-r.top-state.originY)/state.scale);
+  if(state.mode==='side'&&x>=state.width+20)x-=state.width+20;
+  let message='x '+x+' / y '+y;
+  if(state.pixelsA&&x>=0&&y>=0&&x<state.width&&y<state.height){const i=(y*state.width+x)*4;message+=' · A '+Array.from(state.pixelsA.data.slice(i,i+3)).join(',')+' · B '+Array.from(state.pixelsB.data.slice(i,i+3)).join(',');}
+  $('coords').textContent=message;
+});
+canvas.addEventListener('wheel',e=>{if(!state.a&&!state.b)return;e.preventDefault();state.zoom=Math.max(.1,Math.min(8,state.scale*(e.deltaY<0?1.12:1/1.12)));$('zoom').value='';render();},{passive:false});
+new ResizeObserver(render).observe($('workspace'));
+// 本地合成正负对照，安装到其他目录也能使用，不依赖旧项目的截图路径。
+async function example(){
+  try {
+    const sample=offset=>{
+      const demo=document.createElement('canvas');demo.width=640;demo.height=360;
+      const context=demo.getContext('2d');context.fillStyle='#081b33';context.fillRect(0,0,640,360);
+      context.fillStyle='#153958';context.fillRect(28+offset,50,260,260);context.strokeStyle='#27d9ed';context.lineWidth=2;context.strokeRect(28+offset,50,260,260);
+      context.fillStyle='#edfaff';context.font='22px sans-serif';context.fillText('LOCAL DEMO',48+offset,92);
+      [85,152,118,178].forEach((height,index)=>{context.fillStyle=index%2?'#e8cf81':'#2bd4df';context.fillRect(56+index*54+offset,278-height,26,height);});
+      context.beginPath();context.arc(457,178,87,0,Math.PI*2);context.strokeStyle='#32d8e2';context.lineWidth=24;context.stroke();
+      return demo.toDataURL('image/png');
+    };
+    await Promise.all([load('a',sample(0)),load('b',sample(6))]);reset();
+  }catch(e){error(e);}
+}
+$('example').onclick=example;
+const params=new URLSearchParams(location.search);if(params.has('ref')&&params.has('actual')){Promise.all([load('a',params.get('ref')),load('b',params.get('actual'))]).catch(error);}else if(params.get('example')==='1'){example();}
+</script>
+</body>
+</html>

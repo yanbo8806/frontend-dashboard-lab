@@ -1,0 +1,352 @@
+{
+  "version": 1,
+  "meta": {
+    "title": "咸阳文旅运行态势",
+    "subtitle": "国庆假期 · 2026.10.01 — 10.07",
+    "city": "咸阳",
+    "dataLabel": "教学演示 · 非真实统计",
+    "updatedAt": "2026-10-18T20:00:00+08:00"
+  },
+  "labels": {
+    "trend": "景区客流变化趋势",
+    "travel": "游客出游分析",
+    "routes": "热门景点线路",
+    "attractions": "咸阳人气景点",
+    "origins": "客源地 TOP5",
+    "demographics": "游客人群画像",
+    "travelCenter": "出游方式\n占比",
+    "gender": "性别占比",
+    "age": "年龄分布",
+    "heat": "热度",
+    "trendUnit": "游客量（万人次）",
+    "map": "重点景区空间分布"
+  },
+  "kpis": [
+    {
+      "id": "K1",
+      "label": "累计游客规模",
+      "value": 128.6,
+      "unit": "万",
+      "change": 12.8,
+      "icon": "users"
+    },
+    {
+      "id": "K2",
+      "label": "跨省游客占比",
+      "value": 57,
+      "unit": "%",
+      "change": 3.2,
+      "icon": "province"
+    },
+    {
+      "id": "K3",
+      "label": "平均出游距离",
+      "value": 339,
+      "unit": "km",
+      "change": -2.1,
+      "icon": "pin"
+    },
+    {
+      "id": "K4",
+      "label": "文旅关注增长",
+      "value": 32,
+      "unit": "%",
+      "change": 8.6,
+      "icon": "app"
+    }
+  ],
+  "trend": {
+    "categories": [
+      "10.01",
+      "10.02",
+      "10.03",
+      "10.04",
+      "10.05",
+      "10.06",
+      "10.07"
+    ],
+    "yMax": 0,
+    "series": [
+      {
+        "name": "本期",
+        "color": "#3ff6fc",
+        "values": [
+          13.4,
+          18.6,
+          22.8,
+          23.1,
+          20.2,
+          17.9,
+          12.6
+        ]
+      },
+      {
+        "name": "同期",
+        "color": "#f6e464",
+        "values": [
+          11.8,
+          16.2,
+          20.5,
+          21.2,
+          17.6,
+          15.6,
+          11.1
+        ]
+      }
+    ]
+  },
+  "travel": [
+    {
+      "name": "短途游",
+      "value": 42.3,
+      "color": "#3ff6fc",
+      "icon": "car"
+    },
+    {
+      "name": "中途游",
+      "value": 27,
+      "color": "#29f8a7",
+      "icon": "train"
+    },
+    {
+      "name": "长途游",
+      "value": 30.7,
+      "color": "#fcea6c",
+      "icon": "plane"
+    }
+  ],
+  "attractions": [
+    {
+      "id": "qianling",
+      "name": "乾陵",
+      "district": "乾县",
+      "longitude": 108.2115,
+      "latitude": 34.5751,
+      "rank": 1,
+      "heat": 98.9,
+      "image": "media/demo-1.svg",
+      "imagePosition": "50% 50%",
+      "imageSource": "",
+      "imageCredit": "教学项目自绘 SVG 示意插图，非景点实拍照片。",
+      "description": "唐高宗李治与武则天合葬陵，感受盛唐历史与石刻艺术。",
+      "coordinateNote": "WGS84 参考位置，非实测入口；可在配置中校准。"
+    },
+    {
+      "id": "tongyi",
+      "name": "统一广场",
+      "district": "秦都区",
+      "longitude": 108.7054,
+      "latitude": 34.3244,
+      "rank": 2,
+      "heat": 92.6,
+      "image": "media/demo-2.svg",
+      "imagePosition": "50% 50%",
+      "imageSource": "",
+      "imageCredit": "教学项目自绘 SVG 示意插图，非景点实拍照片。",
+      "description": "咸阳湖畔的城市文化广场，秦文化与渭水风光相映。",
+      "coordinateNote": "WGS84 参考位置，非实测入口；可在配置中校准。"
+    },
+    {
+      "id": "yuanjia",
+      "name": "袁家村",
+      "district": "礼泉县",
+      "longitude": 108.5358,
+      "latitude": 34.6067,
+      "rank": 3,
+      "heat": 91.8,
+      "image": "media/demo-3.svg",
+      "imagePosition": "50% 50%",
+      "imageSource": "",
+      "imageCredit": "教学项目自绘 SVG 示意插图，非景点实拍照片。",
+      "description": "关中民俗与乡村美食体验地，漫游老街与传统院落。",
+      "coordinateNote": "WGS84 参考位置，非实测入口；可在配置中校准。"
+    },
+    {
+      "id": "mawei",
+      "name": "马嵬驿",
+      "district": "兴平市",
+      "longitude": 108.4268,
+      "latitude": 34.3518,
+      "rank": 4,
+      "heat": 86.2,
+      "image": "media/demo-4.svg",
+      "imagePosition": "50% 50%",
+      "imageSource": "",
+      "imageCredit": "教学项目自绘 SVG 示意插图，非景点实拍照片。",
+      "description": "古驿站文化与关中民俗交融，体验乡土街巷和特色小吃。",
+      "coordinateNote": "WGS84 参考位置，非实测入口；可在配置中校准。"
+    },
+    {
+      "id": "silkroad",
+      "name": "丝路欢乐世界",
+      "district": "西咸新区·沣西新城",
+      "longitude": 108.6878,
+      "latitude": 34.2325,
+      "rank": 5,
+      "heat": 88.5,
+      "image": "media/demo-5.svg",
+      "imagePosition": "50% 50%",
+      "imageSource": "",
+      "imageCredit": "教学项目自绘 SVG 示意插图，非景点实拍照片。",
+      "description": "以丝路文化为主题的欢乐园区，涵盖主题游乐与文化演艺。",
+      "coordinateNote": "WGS84 参考位置，非实测入口；属西咸新区沣西新城，按文旅目的地纳入。"
+    }
+  ],
+  "routes": [
+    {
+      "id": "r-qianling",
+      "fromId": "hub",
+      "toId": "qianling",
+      "value": 98.9,
+      "height": 6500,
+      "color": "#ffe38a",
+      "enabled": true
+    },
+    {
+      "id": "r-tongyi",
+      "fromId": "hub",
+      "toId": "tongyi",
+      "value": 92.6,
+      "height": 1800,
+      "color": "#3ff6fc",
+      "enabled": true
+    },
+    {
+      "id": "r-yuanjia",
+      "fromId": "hub",
+      "toId": "yuanjia",
+      "value": 91.8,
+      "height": 5800,
+      "color": "#3ff6fc",
+      "enabled": true
+    },
+    {
+      "id": "r-mawei",
+      "fromId": "hub",
+      "toId": "mawei",
+      "value": 86.2,
+      "height": 4500,
+      "color": "#49bcff",
+      "enabled": true
+    },
+    {
+      "id": "r-silkroad",
+      "fromId": "hub",
+      "toId": "silkroad",
+      "value": 88.5,
+      "height": 3500,
+      "color": "#49bcff",
+      "enabled": true
+    }
+  ],
+  "origins": [
+    {
+      "id": "jiangsu",
+      "name": "江苏省",
+      "value": 18.2,
+      "image": "media/demo-1.svg"
+    },
+    {
+      "id": "zhejiang",
+      "name": "浙江省",
+      "value": 16.5,
+      "image": "media/demo-2.svg"
+    },
+    {
+      "id": "guangdong",
+      "name": "广东省",
+      "value": 14.8,
+      "image": "media/demo-3.svg"
+    },
+    {
+      "id": "sichuan",
+      "name": "四川省",
+      "value": 12.6,
+      "image": "media/demo-4.svg"
+    },
+    {
+      "id": "henan",
+      "name": "河南省",
+      "value": 10.4,
+      "image": "media/demo-5.svg"
+    }
+  ],
+  "demographics": {
+    "gender": [
+      {
+        "name": "男性",
+        "value": 50.7,
+        "color": "#03f0fb"
+      },
+      {
+        "name": "女性",
+        "value": 49.3,
+        "color": "#f8a1ed"
+      }
+    ],
+    "ages": [
+      {
+        "name": "18岁以下",
+        "value": 5.6
+      },
+      {
+        "name": "18–25岁",
+        "value": 22.2
+      },
+      {
+        "name": "26–35岁",
+        "value": 26
+      },
+      {
+        "name": "36–45岁",
+        "value": 20.3
+      },
+      {
+        "name": "46–60岁",
+        "value": 16
+      },
+      {
+        "name": "60岁以上",
+        "value": 9.9
+      }
+    ]
+  },
+  "map": {
+    "center": [
+      108.51,
+      34.58
+    ],
+    "zoom": 8.65,
+    "pitch": 48,
+    "bearing": -15,
+    "focusZoom": 10.5,
+    "boundaryUrl": "geo/xianyang.geojson",
+    "boundaryCrs": "GCJ02",
+    "pointCrs": "WGS84",
+    "boundaryAttribution": "行政区轮廓：阿里云 DataV（示意，非标准地图）",
+    "extrusionHeight": 900,
+    "animate": true,
+    "showDistricts": true,
+    "showLabels": true,
+    "tilesUrl": "",
+    "tilesAttribution": "",
+    "terrainUrl": "",
+    "terrainEncoding": "mapbox",
+    "terrainExaggeration": 1.8,
+    "terrainEnabled": true,
+    "terrainAttribution": "",
+    "flightWidth": 3.2,
+    "hub": {
+      "name": "咸阳城区",
+      "longitude": 108.749,
+      "latitude": 34.386
+    }
+  },
+  "dataSource": {
+    "mode": "local",
+    "url": "api/dashboard",
+    "responsePath": "data",
+    "refreshSeconds": 60,
+    "timeoutMs": 10000
+  }
+}

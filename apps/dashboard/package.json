@@ -1,0 +1,33 @@
+{
+  "name": "trend-dashboard",
+  "private": true,
+  "version": "1.0.0",
+  "description": "模块化前端教学大屏：原生 JS、ECharts、Three.js、MapLibre、配置与 API。",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "start": "node tools/server.mjs",
+    "test": "node --test --test-timeout=60000 tests/*.test.mjs",
+    "test:e2e": "node tools/verify-app.mjs",
+    "test:terrain": "node tools/verify-terrain.mjs",
+    "test:header-origins": "node tools/verify-header-origins.mjs",
+    "test:image-map": "node tools/verify-image-map.mjs",
+    "terrain:prepare": "node tools/prepare-terrain.mjs",
+    "template": "node tools/build-template.mjs",
+    "shot": "node ../../packages/img2code/bin/img2code.mjs shot --serve-dir dist --out out/shot.png --width 1871 --height 841 --repeat 2 --json out/shot.json",
+    "verify": "node tools/verify-current.mjs"
+  },
+  "engines": { "node": ">=22.21.0" },
+  "dependencies": {
+    "echarts": "^5.6.0",
+    "exceljs": "4.4.0",
+    "lucide": "1.59.0",
+    "maplibre-gl": "5.24.0",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "vite": "^7.1.5"
+  }
+}
